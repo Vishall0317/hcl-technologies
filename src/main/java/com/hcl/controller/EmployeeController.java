@@ -6,18 +6,21 @@ import com.hcl.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
+@Validated
 public class EmployeeController {
 
     @Autowired
     private EmployeeService employeeService;
 
     @PostMapping("/employees")
-    public ResponseEntity<String> addEmployeeDetails(@RequestBody EmployeeRequestDto employeeRequestDto){
+    public ResponseEntity<String> addEmployeeDetails(@Valid @RequestBody EmployeeRequestDto employeeRequestDto){
 
         boolean response=employeeService.addEmployeeDetails(employeeRequestDto);
         if(response){
