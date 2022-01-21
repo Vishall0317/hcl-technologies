@@ -1,7 +1,7 @@
 package com.hcl.service;
 
 import com.hcl.dto.EmployeeRequestDto;
-import com.hcl.model.Employee;
+import com.hcl.dto.EmployeeResponseDto;
 
 import java.util.List;
 
@@ -9,11 +9,11 @@ public interface EmployeeService {
 
     boolean addEmployeeDetails(EmployeeRequestDto employeeRequestDto);
 
-    List<Employee> getAllEmployeeDetails();
+    List<EmployeeResponseDto> getAllEmployeeDetails();
 
-    Employee getEmployeeDetails(Integer employeeId);
+    EmployeeResponseDto getEmployeeDetails(Integer employeeId);
 
-    boolean updateEmployeeDetails(Employee employee, Integer employeeId);
+    boolean updateEmployeeDetails(EmployeeRequestDto employeeRequestDto, Integer employeeId);
 
     boolean deleteEmployeeDetails(Integer employeeId);
 }

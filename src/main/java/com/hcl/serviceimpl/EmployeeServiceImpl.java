@@ -1,6 +1,7 @@
 package com.hcl.serviceimpl;
 
 import com.hcl.dto.EmployeeRequestDto;
+import com.hcl.dto.EmployeeResponseDto;
 import com.hcl.exception.NotFoundException;
 import com.hcl.model.Employee;
 import com.hcl.repository.EmployeeRepository;
@@ -33,40 +34,42 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public List<Employee> getAllEmployeeDetails() {
+    public List<EmployeeResponseDto> getAllEmployeeDetails() {
 
-        List<Employee> employeeList=new ArrayList<>();
+        List<EmployeeResponseDto> employeeList=new ArrayList<>();
         var iterator=employeeRepository.findAll().iterator();
 
         while (iterator.hasNext()){
-            var employee=new Employee();
+            var employeeResponseDto=new EmployeeResponseDto();
             //iterator.next() is a source and employee is a target.
-            BeanUtils.copyProperties(iterator.next(), employee);
-            employeeList.add(employee);
+            BeanUtils.copyProperties(iterator.next(), employeeResponseDto);
+            employeeList.add(employeeResponseDto);
         }
         return employeeList;
     }
 
     @Override
-    public Employee getEmployeeDetails(Integer employeeId) {
+    public EmployeeResponseDto getEmployeeDetails(Integer employeeId) {
 
-        var employee=new Employee();
+        var employeeResponseDto=new EmployeeResponseDto();
         Optional<Employee> optionalEmployee=employeeRepository.findById(employeeId);
         if(optionalEmployee.isEmpty()){
             throw new NotFoundException("Employee doesn't exist for the id "
                     +employeeId+"!! or you enter wrong id please enter proper id");
         }
 
-        BeanUtils.copyProperties(optionalEmployee.get(), employee);
-        return employee;
+        BeanUtils.copyProperties(optionalEmployee.get(), employeeResponseDto);
+        return employeeResponseDto;
     }
 
     @Override
-    public boolean updateEmployeeDetails(Employee employee, Integer employeeId) {
+    public boolean updateEmployeeDetails(EmployeeRequestDto employeeRequestDto, Integer employeeId) {
 
         var updatedEmployee=employeeRepository.findById(employeeId).orElseThrow(()->
                 new NotFoundException("Employee doesn't exist for the id "+employeeId));
-        employee.setEmployeeId(employeeId);
+        employeeRequestDto.setEmployeeId(employeeId);
+        var employee=new Employee();
+        BeanUtils.copyProperties(employeeRequestDto, employee);
         employeeRepository.save(employee);
         if(ObjectUtils.isEmpty(updatedEmployee)){
             return false;

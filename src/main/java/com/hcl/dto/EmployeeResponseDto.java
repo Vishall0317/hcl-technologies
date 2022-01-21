@@ -1,6 +1,6 @@
 package com.hcl.dto;
 
-public class EmployeeRequestDto {
+public class EmployeeResponseDto {
 
     private Integer employeeId;
     private String employeeName;
@@ -39,3 +39,4 @@ public class EmployeeRequestDto {
         this.employeePhoneNo = employeePhoneNo;
     }
 }
+

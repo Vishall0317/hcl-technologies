@@ -1,11 +1,12 @@
 package com.hcl.controller;
 
+import com.hcl.dto.EmployeeRequest;
 import com.hcl.dto.EmployeeRequestDto;
-import com.hcl.model.Employee;
+import com.hcl.dto.EmployeeResponseDto;
 import com.hcl.service.EmployeeService;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,50 +15,58 @@ import java.util.List;
 
 @RestController
 @Validated
+//@RequestMapping("/employees")
 public class EmployeeController {
 
     @Autowired
     private EmployeeService employeeService;
 
-    @PostMapping("/employees")
-    public ResponseEntity<String> addEmployeeDetails(@Valid @RequestBody EmployeeRequestDto employeeRequestDto){
+    @PostMapping("")
+    @ResponseStatus(HttpStatus.CREATED)
+    public String addEmployeeDetails(@Valid @RequestBody EmployeeRequest employeeRequest){
 
+        var employeeRequestDto=new EmployeeRequestDto();
+        BeanUtils.copyProperties(employeeRequest, employeeRequestDto);
         boolean response=employeeService.addEmployeeDetails(employeeRequestDto);
-        if(response){
-            return new ResponseEntity<>("Employee data save successfully!", HttpStatus.ACCEPTED);
-        }else{
-            return new ResponseEntity<>("Employee data save unsuccessfully!", HttpStatus.NOT_ACCEPTABLE);
+        if(response) {
+            return "Employee data save successfully!";
+        }else {
+            return "Employee data save unsuccessfully!";
         }
     }
 
-    @GetMapping("/employees")
-    public List<Employee> getAllEmployeeDetails(){
-
+    @GetMapping("")
+    public List<EmployeeResponseDto> getAllEmployeeDetails(){
         return employeeService.getAllEmployeeDetails();
     }
 
-    @GetMapping("/employees/{employeeId}")
-    public Employee getEmployeeDetails(@PathVariable Integer employeeId){
+    @GetMapping("/{employeeId}")
+    public EmployeeResponseDto getEmployeeDetails(@PathVariable Integer employeeId){
         return employeeService.getEmployeeDetails(employeeId);
     }
 
-    @PutMapping("/employees/{employeeId}")
-    public ResponseEntity<String> updateEmployeeDetails(@PathVariable Integer employeeId, @RequestBody Employee employee){
-        boolean response=employeeService.updateEmployeeDetails(employee, employeeId);
+    @PutMapping("/{employeeId}")
+    @ResponseStatus(HttpStatus.CREATED)
+    public String updateEmployeeDetails(@PathVariable Integer employeeId,
+                                        @RequestBody EmployeeRequest employeeRequest){
+        var employeeRequestDto=new EmployeeRequestDto();
+        BeanUtils.copyProperties(employeeRequest, employeeRequestDto);
+        boolean response=employeeService.updateEmployeeDetails(employeeRequestDto, employeeId);
         if(response){
-            return new ResponseEntity<>("Employee data updated successfully!", HttpStatus.ACCEPTED);
+            return "Employee data updated successfully!";
         }else{
-            return new ResponseEntity<>("Employee data update unsuccessfully!", HttpStatus.NOT_ACCEPTABLE);
+            return "Employee data update unsuccessfully!";
         }
     }
 
-    @DeleteMapping("/employees/{employeeId}")
-    public ResponseEntity<String> deleteEmployeeDetails(@PathVariable Integer employeeId){
+    @DeleteMapping("/{employeeId}")
+    @ResponseStatus(HttpStatus.CREATED)
+    public String deleteEmployeeDetails(@PathVariable Integer employeeId){
         boolean response=employeeService.deleteEmployeeDetails(employeeId);
         if(response){
-            return new ResponseEntity<>("Employee data deleted successfully!", HttpStatus.ACCEPTED);
+            return "Employee data deleted successfully!";
         }else{
-            return new ResponseEntity<>("Employee data delete unsuccessfully!", HttpStatus.NOT_ACCEPTABLE);
+            return "Employee data delete unsuccessfully!";
         }
     }
 }

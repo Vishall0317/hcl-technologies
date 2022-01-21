@@ -1,19 +1,17 @@
 package com.hcl.dto;
 
-public class EmployeeRequestDto {
+import javax.validation.constraints.NotEmpty;
 
-    private Integer employeeId;
+public class EmployeeRequest {
+
+    @NotEmpty(message="Employee name can not be empty!")
     private String employeeName;
+
+    @NotEmpty(message="Employee email id can not be empty!")
     private String employeeEmail;
+
+    @NotEmpty(message="Employee phone number can not be empty!")
     private String employeePhoneNo;
-
-    public Integer getEmployeeId() {
-        return employeeId;
-    }
-
-    public void setEmployeeId(Integer employeeId) {
-        this.employeeId = employeeId;
-    }
 
     public String getEmployeeName() {
         return employeeName;
