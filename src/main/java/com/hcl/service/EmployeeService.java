@@ -13,7 +13,7 @@ public interface EmployeeService {
 
     EmployeeResponseDto getEmployeeDetails(Integer employeeId);
 
-    void updateEmployeeDetails(EmployeeRequestDto employeeRequestDto, Integer employeeId);
+    Integer updateEmployeeDetails(EmployeeRequestDto employeeRequestDto, Integer employeeId);
 
-    void deleteEmployeeDetails(Integer employeeId);
+    Integer deleteEmployeeDetails(Integer employeeId);
 }

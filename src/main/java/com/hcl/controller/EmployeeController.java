@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
 @RequestMapping("/employees")
 public class EmployeeController {
 
-    static final String GET_ALL_EMPLOYEES_ERR_MSG = "employeeService.getAllEmployeeDetails response was null";
+    public static final String GET_ALL_EMPLOYEES_ERR_MSG = "employeeService.getAllEmployeeDetails response was null";
 
     @Autowired
     private EmployeeService employeeService;
@@ -34,6 +34,7 @@ public class EmployeeController {
     @PostMapping("")
     @ResponseStatus(HttpStatus.CREATED)
     public String addEmployeeDetails(@Valid @RequestBody EmployeeRequest employeeRequest) {
+        log.info("Received add employee request");
         var employeeRequestDto = new EmployeeRequestDto();
         BeanUtils.copyProperties(employeeRequest, employeeRequestDto);
         Integer employeeId = employeeService.addEmployeeDetails(employeeRequestDto);
@@ -84,8 +85,8 @@ public class EmployeeController {
                                         @RequestBody EmployeeRequest employeeRequest) {
         var employeeRequestDto = new EmployeeRequestDto();
         BeanUtils.copyProperties(employeeRequest, employeeRequestDto);
-        employeeService.updateEmployeeDetails(employeeRequestDto, employeeId);
-        if (employeeId != null) {
+        Integer employeeId1=employeeService.updateEmployeeDetails(employeeRequestDto, employeeId);
+        if (employeeId1 != null) {
             log.info("Employee data updated successfully for id : " + employeeId + ".");
             return "Employee data updated successfully for id : " + employeeId + ".";
         } else {
@@ -96,8 +97,8 @@ public class EmployeeController {
     @DeleteMapping("/{employeeId}")
     @ResponseStatus(HttpStatus.CREATED)
     public String deleteEmployeeDetails(@PathVariable Integer employeeId) {
-        employeeService.deleteEmployeeDetails(employeeId);
-        if (employeeId != null) {
+        Integer employeeId1=employeeService.deleteEmployeeDetails(employeeId);
+        if (employeeId1!= null) {
             log.info("Employee data deleted successfully for id : " + employeeId + ".");
             return "Employee data deleted successfully for id : " + employeeId + ".";
         } else {

@@ -57,7 +57,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public void updateEmployeeDetails(EmployeeRequestDto employeeRequestDto, Integer employeeId) {
+    public Integer updateEmployeeDetails(EmployeeRequestDto employeeRequestDto, Integer employeeId) {
 
         var updatedEmployee=employeeRepository.findById(employeeId).orElseThrow(()->
                 new NotFoundException("Employee doesn't exist for the id "+employeeId));
@@ -65,14 +65,15 @@ public class EmployeeServiceImpl implements EmployeeService {
         var employee=new Employee();
         BeanUtils.copyProperties(employeeRequestDto, employee);
         employeeRepository.save(employee);
+        return employee.getEmployeeId();
     }
 
     @Override
-    public void deleteEmployeeDetails(Integer employeeId) {
+    public Integer deleteEmployeeDetails(Integer employeeId) {
         employeeRepository.findById(employeeId).orElseThrow(()->
                 new NotFoundException("Employee doesn't exist for the id "+employeeId));
 
         employeeRepository.findById(employeeId).ifPresent(Employee -> employeeRepository.delete(Employee));
-
+        return employeeId;
     }
 }

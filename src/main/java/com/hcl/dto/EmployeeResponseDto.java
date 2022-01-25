@@ -7,6 +7,16 @@ public class EmployeeResponseDto {
     private String employeeEmail;
     private String employeePhoneNo;
 
+    public EmployeeResponseDto() {
+    }
+
+    public EmployeeResponseDto(Integer employeeId, String employeeName, String employeeEmail, String employeePhoneNo) {
+        this.employeeId = employeeId;
+        this.employeeName = employeeName;
+        this.employeeEmail = employeeEmail;
+        this.employeePhoneNo = employeePhoneNo;
+    }
+
     public Integer getEmployeeId() {
         return employeeId;
     }

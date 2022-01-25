@@ -79,17 +79,17 @@ public class EmployeeServiceImplTest {
 //        // assertEquals(0, result);
 //    }
 
-//    @Test
-//    void getEmployeeDetailsTest(){
-//        employeeServiceImpl.getEmployeeDetails(1);
-//        assertThat(employeeRequestDto.getEmployeeId()).isEqualTo(1);
-//    }
+    @Test
+    void getEmployeeDetailsTest(){
+        employeeServiceImpl.getEmployeeDetails(1);
+        assertThat(employeeRequestDto.getEmployeeId()).isEqualTo(1);
+    }
 
-//    @Test
-//    void getAllEmployeeDetailsTest(){
-//        employeeServiceImpl.getAllEmployeeDetails();
-//        verify(employeeRepository).findAll();
-//    }
+    @Test
+    void getAllEmployeeDetailsTest(){
+        employeeServiceImpl.getAllEmployeeDetails();
+        verify(employeeRepository).findAll();
+    }
 
 }
 

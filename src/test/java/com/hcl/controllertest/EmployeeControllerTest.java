@@ -26,6 +26,8 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 public class EmployeeControllerTest {
 
+    static final String GET_ALL_EMPLOYEES_ERR_MSG = "employeeService.getAllEmployeeDetails response was null";
+
     @Mock
     EmployeeService employeeService;
 
@@ -35,6 +37,8 @@ public class EmployeeControllerTest {
     EmployeeRequestDto employeeRequestDto;
 
     EmployeeRequest employeeRequest;
+
+    EmployeeResponseDto employeeResponseDto;
 
     List<EmployeeResponseDto> employeeResponseDtos;
 
@@ -46,22 +50,30 @@ public class EmployeeControllerTest {
         employeeRequest.setEmployeePhoneNo("9090909090");
 
         employeeResponseDtos=getEmployeeResponseDtos();
+
+        employeeResponseDto=new EmployeeResponseDto(1,"Raaja","raaja@hcl.com","9090909090");
+
+    }
+
+    private List<EmployeeResponseDto> getEmployeeResponseDtos(){
+        employeeResponseDtos=new ArrayList<>();
+        EmployeeResponseDto employee1=new EmployeeResponseDto(1,"Raaja","raaja@hcl.com","9090909090");
+        employeeResponseDtos.add(employee1);
+        return employeeResponseDtos;
     }
 
     @Test
-    @DisplayName("save employee data : positive")
-    void saveEmployeeDataTest_Positive(){
-        //context
+    void testAddEmployeeDetailsShouldSaveEmployeeDetails(){
+        //given
         when(employeeService.addEmployeeDetails(any(EmployeeRequestDto.class))).thenReturn(1);
-        //event
+        //when
         String result=employeeController.addEmployeeDetails(employeeRequest);
-        //outcome
+        //then
         assertEquals("Employee data saved successfully for id : 1.", result);
     }
 
     @Test
-    @DisplayName("save employee data : negative")
-    void saveEmployeeDataTest_Negative(){
+    void testAddEmployeeDetailsShouldFailedToSaveEmployeeDetails(){
         //context
        when(employeeService.addEmployeeDetails(any(EmployeeRequestDto.class))).thenReturn(null);
         //event
@@ -85,20 +97,33 @@ public class EmployeeControllerTest {
     public void testGetEmployeesShouldThrowNotFoundExceptionWhenServiceReturnNull() throws NotFoundException{
         //given
         when(employeeService.getAllEmployeeDetails()).thenReturn(null);
-
         //when
-       // Exception exception=assertThrows(NotFoundException.class)
-
+        Exception exception=assertThrows(NotFoundException.class, ()->{
+            employeeController.getAllEmployeeDetails();
+        });
+        //then
+        String expectedMessage=EmployeeController.GET_ALL_EMPLOYEES_ERR_MSG;
+        String actualMessage=exception.getMessage();
+        assertTrue(actualMessage.contains(expectedMessage));
     }
 
-    private List<EmployeeResponseDto> getEmployeeResponseDtos(){
-        employeeResponseDtos=new ArrayList<>();
-        EmployeeResponseDto employee1=new EmployeeResponseDto();
-        employee1.setEmployeeId(1);
-        employee1.setEmployeeName("Raaja");
-        employee1.setEmployeeEmail("raaja@hcl.com");;
-        employee1.setEmployeePhoneNo("9090909090");
-        employeeResponseDtos.add(employee1);
-        return employeeResponseDtos;
+    @Test
+    public void testGetEmployeeDetailsShouldReturnEmployeeDetails(){
+        //given
+        when(employeeService.getEmployeeDetails(1)).thenReturn(employeeResponseDto);
+        //when
+        EmployeeResponseDto responseDto=employeeController.getEmployeeDetails(1);
+        System.out.println(responseDto);
+        //then
+        assertNotNull(responseDto);
+    }
+
+    @Test
+    public void testUpdateEmployeeDetailsShouldReturnUpdatedEmployeeDetails(){
+        //given
+        when(employeeService.updateEmployeeDetails(any(EmployeeRequestDto.class),1)).thenReturn(1);
+        //when
+
+        //then
     }
 }
