@@ -7,13 +7,13 @@ import java.util.List;
 
 public interface EmployeeService {
 
-    boolean addEmployeeDetails(EmployeeRequestDto employeeRequestDto);
+    Integer addEmployeeDetails(EmployeeRequestDto employeeRequestDto);
 
     List<EmployeeResponseDto> getAllEmployeeDetails();
 
     EmployeeResponseDto getEmployeeDetails(Integer employeeId);
 
-    boolean updateEmployeeDetails(EmployeeRequestDto employeeRequestDto, Integer employeeId);
+    void updateEmployeeDetails(EmployeeRequestDto employeeRequestDto, Integer employeeId);
 
-    boolean deleteEmployeeDetails(Integer employeeId);
+    void deleteEmployeeDetails(Integer employeeId);
 }

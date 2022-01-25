@@ -1,6 +1,7 @@
 package com.hcl.servicetest;
 
 import com.hcl.dto.EmployeeRequestDto;
+import com.hcl.exception.NotFoundException;
 import com.hcl.model.Employee;
 import com.hcl.repository.EmployeeRepository;
 import com.hcl.serviceimpl.EmployeeServiceImpl;
@@ -13,9 +14,12 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import java.util.Optional;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -36,6 +40,7 @@ public class EmployeeServiceImplTest {
     @BeforeEach
     public void setUp() {
         employeeRequestDto = new EmployeeRequestDto();
+        employeeRequestDto.setEmployeeId(1);
         employeeRequestDto.setEmployeeName("Raaja");
         employeeRequestDto.setEmployeeEmail("raaja@hcl.com");
         employeeRequestDto.setEmployeePhoneNo("9090909090");
@@ -44,32 +49,47 @@ public class EmployeeServiceImplTest {
     @Test
     @DisplayName("save employee data : positive")
     void saveEmployeeDataTest_Positive() {
-
         //context
         when(employeeRepository.save(any(Employee.class))).thenAnswer(i -> {
             Employee employee = i.getArgument(0);
             employee.setEmployeeId(1);
             return employee;
         });
-
         //event
-        boolean result = employeeServiceImpl.addEmployeeDetails(employeeRequestDto);
-
+        Integer result = employeeServiceImpl.addEmployeeDetails(employeeRequestDto);
         //outcome
-        assertTrue(result);
+        assertEquals(1, result);
     }
 
-    @Test
-    @DisplayName("save employee data : negative")
-    void saveEmployeeDataTest_Negative() {
+//    @Test
+//    @DisplayName("save employee data : negative")
+//    void saveEmployeeDataTest_Negative() {
+//
+//        //context
+//        Optional<Employee> optionalEmployee = Optional.empty();
+//        when(employeeRepository.findById(employeeRequestDto.getEmployeeId())).thenReturn(optionalEmployee);
+//        // when(employeeRepository.save(any(Employee.class))).thenReturn(savedEmployee);
+//
+//        assertThrows(NotFoundException.class,
+//                () -> employeeServiceImpl.addEmployeeDetails(employeeRequestDto));
+//        //event
+//        //Integer result = employeeServiceImpl.addEmployeeDetails(employeeRequestDto);
+//
+//        //outcome
+//        // assertEquals(0, result);
+//    }
 
-        //context
-        when(employeeRepository.save(any(Employee.class))).thenReturn(savedEmployee);
+//    @Test
+//    void getEmployeeDetailsTest(){
+//        employeeServiceImpl.getEmployeeDetails(1);
+//        assertThat(employeeRequestDto.getEmployeeId()).isEqualTo(1);
+//    }
 
-        //event
-        boolean result = employeeServiceImpl.addEmployeeDetails(employeeRequestDto);
+//    @Test
+//    void getAllEmployeeDetailsTest(){
+//        employeeServiceImpl.getAllEmployeeDetails();
+//        verify(employeeRepository).findAll();
+//    }
 
-        //outcome
-        assertFalse(result);
-    }
 }
+

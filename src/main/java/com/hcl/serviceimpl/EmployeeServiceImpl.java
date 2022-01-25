@@ -9,7 +9,6 @@ import com.hcl.service.EmployeeService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.ObjectUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,15 +21,11 @@ public class EmployeeServiceImpl implements EmployeeService {
     EmployeeRepository employeeRepository;
 
     @Override
-    public boolean addEmployeeDetails(EmployeeRequestDto employeeRequestDto) {
+    public Integer addEmployeeDetails(EmployeeRequestDto employeeRequestDto) {
         var employee=new Employee();
         BeanUtils.copyProperties(employeeRequestDto, employee);
         var savedEmployee=employeeRepository.save(employee);
-        if(ObjectUtils.isEmpty(savedEmployee)){
-            return false;
-        }else {
-            return true;
-        }
+        return employee.getEmployeeId();
     }
 
     @Override
@@ -41,7 +36,6 @@ public class EmployeeServiceImpl implements EmployeeService {
 
         while (iterator.hasNext()){
             var employeeResponseDto=new EmployeeResponseDto();
-            //iterator.next() is a source and employee is a target.
             BeanUtils.copyProperties(iterator.next(), employeeResponseDto);
             employeeList.add(employeeResponseDto);
         }
@@ -63,7 +57,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public boolean updateEmployeeDetails(EmployeeRequestDto employeeRequestDto, Integer employeeId) {
+    public void updateEmployeeDetails(EmployeeRequestDto employeeRequestDto, Integer employeeId) {
 
         var updatedEmployee=employeeRepository.findById(employeeId).orElseThrow(()->
                 new NotFoundException("Employee doesn't exist for the id "+employeeId));
@@ -71,24 +65,14 @@ public class EmployeeServiceImpl implements EmployeeService {
         var employee=new Employee();
         BeanUtils.copyProperties(employeeRequestDto, employee);
         employeeRepository.save(employee);
-        if(ObjectUtils.isEmpty(updatedEmployee)){
-            return false;
-        }else {
-            return true;
-        }
     }
 
     @Override
-    public boolean deleteEmployeeDetails(Integer employeeId) {
-        var deletedEmployee=employeeRepository.findById(employeeId).orElseThrow(()->
+    public void deleteEmployeeDetails(Integer employeeId) {
+        employeeRepository.findById(employeeId).orElseThrow(()->
                 new NotFoundException("Employee doesn't exist for the id "+employeeId));
 
         employeeRepository.findById(employeeId).ifPresent(Employee -> employeeRepository.delete(Employee));
 
-        if(ObjectUtils.isEmpty(deletedEmployee)){
-            return false;
-        }else {
-            return true;
-        }
     }
 }
