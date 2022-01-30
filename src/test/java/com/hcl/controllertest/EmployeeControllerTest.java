@@ -21,6 +21,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -80,7 +81,6 @@ public class EmployeeControllerTest {
         String result=employeeController.addEmployeeDetails(employeeRequest);
         //outcome
        assertEquals("Employee data save unsuccessfully!", result);
-
     }
 
     @Test
@@ -113,7 +113,6 @@ public class EmployeeControllerTest {
         when(employeeService.getEmployeeDetails(1)).thenReturn(employeeResponseDto);
         //when
         EmployeeResponseDto responseDto=employeeController.getEmployeeDetails(1);
-        System.out.println(responseDto);
         //then
         assertNotNull(responseDto);
     }
@@ -121,9 +120,20 @@ public class EmployeeControllerTest {
     @Test
     public void testUpdateEmployeeDetailsShouldReturnUpdatedEmployeeDetails(){
         //given
-        when(employeeService.updateEmployeeDetails(any(EmployeeRequestDto.class),1)).thenReturn(1);
+        when(employeeService.updateEmployeeDetails(any(EmployeeRequestDto.class),eq(1))).thenReturn(1);
         //when
-
+        String result=employeeController.updateEmployeeDetails(employeeRequest,1);
         //then
+        assertEquals("Employee data updated successfully for id : 1.", result);
+    }
+
+    @Test
+    public void testDeleteEmployeeDetailsShouldDeleteEmployeeDetails(){
+        //given
+        when(employeeService.deleteEmployeeDetails(1)).thenReturn(1);
+        //when
+        String result=employeeController.deleteEmployeeDetails(1);
+        //then
+        assertEquals("Employee data deleted successfully for id : 1.", result);
     }
 }

@@ -59,7 +59,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public Integer updateEmployeeDetails(EmployeeRequestDto employeeRequestDto, Integer employeeId) {
 
-        var updatedEmployee=employeeRepository.findById(employeeId).orElseThrow(()->
+        employeeRepository.findById(employeeId).orElseThrow(()->
                 new NotFoundException("Employee doesn't exist for the id "+employeeId));
         employeeRequestDto.setEmployeeId(employeeId);
         var employee=new Employee();

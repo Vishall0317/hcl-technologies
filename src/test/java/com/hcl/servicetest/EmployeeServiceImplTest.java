@@ -1,5 +1,6 @@
 package com.hcl.servicetest;
 
+import com.hcl.controller.EmployeeController;
 import com.hcl.dto.EmployeeRequestDto;
 import com.hcl.exception.NotFoundException;
 import com.hcl.model.Employee;
@@ -24,6 +25,7 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class EmployeeServiceImplTest {
+    static final String UPDATE_EMPLOYEES_ERR_MSG = "employeeService.updateEmployeeDetails response was null";
 
     @Mock
     EmployeeRepository employeeRepository;
@@ -39,6 +41,12 @@ public class EmployeeServiceImplTest {
 
     @BeforeEach
     public void setUp() {
+        employee=new Employee();
+        employee.setEmployeeId(1);
+        employee.setEmployeeName("Raaja");
+        employee.setEmployeeEmail("raaja@hcl.com");
+        employee.setEmployeePhoneNo("9090909090");
+
         employeeRequestDto = new EmployeeRequestDto();
         employeeRequestDto.setEmployeeId(1);
         employeeRequestDto.setEmployeeName("Raaja");
@@ -61,26 +69,30 @@ public class EmployeeServiceImplTest {
         assertEquals(1, result);
     }
 
-//    @Test
-//    @DisplayName("save employee data : negative")
-//    void saveEmployeeDataTest_Negative() {
-//
-//        //context
-//        Optional<Employee> optionalEmployee = Optional.empty();
-//        when(employeeRepository.findById(employeeRequestDto.getEmployeeId())).thenReturn(optionalEmployee);
-//        // when(employeeRepository.save(any(Employee.class))).thenReturn(savedEmployee);
-//
-//        assertThrows(NotFoundException.class,
-//                () -> employeeServiceImpl.addEmployeeDetails(employeeRequestDto));
-//        //event
-//        //Integer result = employeeServiceImpl.addEmployeeDetails(employeeRequestDto);
-//
-//        //outcome
-//        // assertEquals(0, result);
-//    }
+    @Test
+    @DisplayName("save employee data : negative")
+    void saveEmployeeDataTest_Negative() throws NotFoundException{
+
+        //context
+        Optional<Employee> optionalEmployee = Optional.empty();
+        when(employeeRepository.findById(employeeRequestDto.getEmployeeId())).thenReturn(optionalEmployee);
+        // when(employeeRepository.save(any(Employee.class))).thenReturn(savedEmployee);
+
+        Exception exception=assertThrows(NotFoundException.class, () -> employeeServiceImpl.addEmployeeDetails(employeeRequestDto));
+        String expectedMessage= EmployeeController.UPDATE_EMPLOYEES_ERR_MSG;
+        String actualMessage=exception.getMessage();
+        assertTrue(actualMessage.contains(expectedMessage));
+        //event
+        //Integer result = employeeServiceImpl.addEmployeeDetails(employeeRequestDto);
+
+        //outcome
+        // assertEquals(0, result);
+    }
 
     @Test
-    void getEmployeeDetailsTest(){
+    void testGetEmployeeDetails(){
+        Optional<Employee> optionalEmployee= Optional.of(employee);
+        when(employeeRepository.findById(employeeRequestDto.getEmployeeId())).thenReturn(optionalEmployee);
         employeeServiceImpl.getEmployeeDetails(1);
         assertThat(employeeRequestDto.getEmployeeId()).isEqualTo(1);
     }
@@ -89,6 +101,22 @@ public class EmployeeServiceImplTest {
     void getAllEmployeeDetailsTest(){
         employeeServiceImpl.getAllEmployeeDetails();
         verify(employeeRepository).findAll();
+    }
+
+    @Test
+    void testUpdateEmployeeDetails(){
+        Optional<Employee> optionalEmployee= Optional.of(employee);
+        when(employeeRepository.findById(employeeRequestDto.getEmployeeId())).thenReturn(optionalEmployee);
+        employeeServiceImpl.updateEmployeeDetails(employeeRequestDto,1);
+        assertThat(employeeRequestDto.getEmployeeId()).isEqualTo(1);
+    }
+
+    @Test
+    void testDeleteteEmployeeDetails(){
+        Optional<Employee> optionalEmployee= Optional.of(employee);
+        when(employeeRepository.findById(employeeRequestDto.getEmployeeId())).thenReturn(optionalEmployee);
+        employeeServiceImpl.deleteEmployeeDetails(1);
+        assertThat(employeeRequestDto.getEmployeeId()).isEqualTo(1);
     }
 
 }

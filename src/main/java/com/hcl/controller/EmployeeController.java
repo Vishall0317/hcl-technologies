@@ -27,6 +27,7 @@ import java.util.stream.Collectors;
 public class EmployeeController {
 
     public static final String GET_ALL_EMPLOYEES_ERR_MSG = "employeeService.getAllEmployeeDetails response was null";
+    public static final String UPDATE_EMPLOYEES_ERR_MSG = "Employee doesn't exist for the id 1";
 
     @Autowired
     private EmployeeService employeeService;
@@ -81,8 +82,7 @@ public class EmployeeController {
 
     @PutMapping("/{employeeId}")
     @ResponseStatus(HttpStatus.CREATED)
-    public String updateEmployeeDetails(@PathVariable Integer employeeId,
-                                        @RequestBody EmployeeRequest employeeRequest) {
+    public String updateEmployeeDetails(@RequestBody EmployeeRequest employeeRequest, @PathVariable Integer employeeId) {
         var employeeRequestDto = new EmployeeRequestDto();
         BeanUtils.copyProperties(employeeRequest, employeeRequestDto);
         Integer employeeId1=employeeService.updateEmployeeDetails(employeeRequestDto, employeeId);
