@@ -2,6 +2,7 @@ package com.hcl.service;
 
 import com.hcl.dto.EmployeeRequestDto;
 import com.hcl.dto.EmployeeResponseDto;
+import com.hcl.exception.NotFoundException;
 
 import java.util.List;
 
@@ -11,9 +12,9 @@ public interface EmployeeService {
 
     List<EmployeeResponseDto> getAllEmployeeDetails();
 
-    EmployeeResponseDto getEmployeeDetails(Integer employeeId);
+    EmployeeResponseDto getEmployeeDetails(Integer employeeId) throws NotFoundException;
 
-    Integer updateEmployeeDetails(EmployeeRequestDto employeeRequestDto, Integer employeeId);
+    Integer updateEmployeeDetails(EmployeeRequestDto employeeRequestDto, Integer employeeId) throws NotFoundException;
 
-    Integer deleteEmployeeDetails(Integer employeeId);
+    Integer deleteEmployeeDetails(Integer employeeId) throws NotFoundException;
 }

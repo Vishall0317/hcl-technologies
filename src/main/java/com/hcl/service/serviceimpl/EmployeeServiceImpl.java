@@ -1,4 +1,4 @@
-package com.hcl.serviceimpl;
+package com.hcl.service.serviceimpl;
 
 import com.hcl.dto.EmployeeRequestDto;
 import com.hcl.dto.EmployeeResponseDto;
@@ -16,7 +16,6 @@ import java.util.Optional;
 
 @Service
 public class EmployeeServiceImpl implements EmployeeService {
-
     @Autowired
     EmployeeRepository employeeRepository;
 
@@ -24,7 +23,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     public Integer addEmployeeDetails(EmployeeRequestDto employeeRequestDto) {
         var employee=new Employee();
         BeanUtils.copyProperties(employeeRequestDto, employee);
-        var savedEmployee=employeeRepository.save(employee);
+        employeeRepository.save(employee);
         return employee.getEmployeeId();
     }
 
@@ -43,13 +42,13 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public EmployeeResponseDto getEmployeeDetails(Integer employeeId) {
+    public EmployeeResponseDto getEmployeeDetails(Integer employeeId) throws NotFoundException {
 
         var employeeResponseDto=new EmployeeResponseDto();
         Optional<Employee> optionalEmployee=employeeRepository.findById(employeeId);
         if(optionalEmployee.isEmpty()){
             throw new NotFoundException("Employee doesn't exist for the id "
-                    +employeeId+"!! or you enter wrong id please enter proper id");
+                    +employeeId+"!! or you enter wrong id please enter proper id!!");
         }
 
         BeanUtils.copyProperties(optionalEmployee.get(), employeeResponseDto);
@@ -57,10 +56,10 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public Integer updateEmployeeDetails(EmployeeRequestDto employeeRequestDto, Integer employeeId) {
+    public Integer updateEmployeeDetails(EmployeeRequestDto employeeRequestDto, Integer employeeId) throws NotFoundException {
 
         employeeRepository.findById(employeeId).orElseThrow(()->
-                new NotFoundException("Employee doesn't exist for the id "+employeeId));
+                new NotFoundException("Employee doesn't exist for the id "+employeeId+"!! or you enter wrong id please enter proper id!!"));
         employeeRequestDto.setEmployeeId(employeeId);
         var employee=new Employee();
         BeanUtils.copyProperties(employeeRequestDto, employee);
@@ -69,9 +68,9 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public Integer deleteEmployeeDetails(Integer employeeId) {
+    public Integer deleteEmployeeDetails(Integer employeeId) throws NotFoundException {
         employeeRepository.findById(employeeId).orElseThrow(()->
-                new NotFoundException("Employee doesn't exist for the id "+employeeId));
+                new NotFoundException("Employee doesn't exist for the id "+employeeId+"!! or you enter wrong id please enter proper id!!"));
 
         employeeRepository.findById(employeeId).ifPresent(Employee -> employeeRepository.delete(Employee));
         return employeeId;
